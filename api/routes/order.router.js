@@ -1,16 +1,15 @@
 const express = require('express');
 
-const UserService = require('./../services/user.services');
+const OrderService = require('./../services/order.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const {
-  createUserSchema,
-  updateUserSchema,
-  getUserSchema,
-  updatePartialUserSchema,
-} = require('./../schemas/user.schema');
+  createOrderSchema,
+  getOrderSchema,
+  addItemSchema,
+} = require('./../schemas/order.schema');
 
 const router = express.Router();
-const service = new UserService();
+const service = new OrderService();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -21,7 +20,7 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:id',
-  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(getOrderSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -33,7 +32,7 @@ router.get('/:id',
 );
 
 router.post('/',
-  validatorHandler(createUserSchema, 'body'),
+  validatorHandler(createOrderSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -44,28 +43,13 @@ router.post('/',
   }
 );
 
-router.patch('/:id',
-validatorHandler(getUserSchema, 'params'),
-validatorHandler(updatePartialUserSchema, 'body'),
+router.post('/add-item',
+  validatorHandler(addItemSchema, 'body'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
       const body = req.body;
-      res.json(await service.update(id, body));
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.put('/:id',
-validatorHandler(getUserSchema, 'params'),
-validatorHandler(updateUserSchema, 'body'),
-  async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const body = req.body;
-      res.json(await service.update(id, body));
+      const newItem = await service.addItem(body);
+      res.status(201).json(newItem);
     } catch (error) {
       next(error);
     }

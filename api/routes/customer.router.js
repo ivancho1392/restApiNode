@@ -1,30 +1,27 @@
 const express = require('express');
 
-const ProductService = require('./../services/product.service');
+const CustomerService = require('./../services/customers.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const {
-  createProductSchema,
-  updateProductSchema,
-  getProductSchema,
-  updatePartialProductSchema,
-  queryProductSchema,
-} = require('./../schemas/product.schema');
+  createCustomerSchema,
+  updateCustomerSchema,
+  getCustomerSchema,
+  updatePartialCustomerSchema,
+} = require('./../schemas/customer.schema');
 
 const router = express.Router();
-const service = new ProductService();
+const service = new CustomerService();
 
-router.get('/',
-validatorHandler(queryProductSchema, 'query'),
-async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-    res.json(await service.find(req.query));
+    res.json(await service.find());
   } catch (error) {
     next(error);
   }
 });
 
 router.get('/:id',
-  validatorHandler(getProductSchema, 'params'),
+  validatorHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -36,7 +33,7 @@ router.get('/:id',
 );
 
 router.post('/',
-  validatorHandler(createProductSchema, 'body'),
+  validatorHandler(createCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -48,8 +45,8 @@ router.post('/',
 );
 
 router.patch('/:id',
-validatorHandler(getProductSchema, 'params'),
-validatorHandler(updatePartialProductSchema, 'body'),
+validatorHandler(getCustomerSchema, 'params'),
+validatorHandler(updatePartialCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -62,8 +59,8 @@ validatorHandler(updatePartialProductSchema, 'body'),
 );
 
 router.put('/:id',
-validatorHandler(getProductSchema, 'params'),
-validatorHandler(updateProductSchema, 'body'),
+validatorHandler(getCustomerSchema, 'params'),
+validatorHandler(updateCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

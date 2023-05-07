@@ -1,64 +1,36 @@
 const boom = require('@hapi/boom');
+const { models } = require('./../libs/sequelize');
 
 class UserService {
-  constructor() {
-    /*usuarios de ejemplo con persistencia en memoria, se debe conectar ba se de datos*/
-    this.users = [
-      {
-        id: '1',
-        name: 'Ivan',
-        role: 'admin1',
-      },
-      {
-        id: '2',
-        name: 'Gina',
-        role: 'admin1',
-      },
-    ];
-  }
+  constructor() {}
 
   async create(data) {
-    const newUser = {
-      id: (
-        Number(this.users[this.users.length - 1].id) + 1
-      ).toString() /*agrega automaticante id + 1 al crear nuevo usuario*/,
-      ...data,
-    };
-    this.users.push(newUser);
+    const newUser = await models.User.create(data);
     return newUser;
   }
 
   async find() {
-    return this.users;
+    const rta = await models.User.findAll();
+    return rta;
   }
 
   async findOne(id) {
-    const user = this.users.find((item) => item.id === id);
-    if(!user){
+    const user = await models.User.findByPk(id);
+    if (!user){
       throw boom.notFound('user not found');
     }
     return user;
   }
 
   async update(id, changes) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound('user not found');
-    }
-    const user = this.users[index];
-    this.users[index] = {
-      ...user,
-      ...changes,
-    };
-    return this.users[index];
+    const user = await this.findOne(id);
+    const rta = await user.update(changes);
+    return rta;
   }
 
   async delete(id) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound('user not found');
-    }
-    this.users.splice(index, 1);
+    const user = await this.findOne(id);
+    await user.destroy();
     return { id };
   }
 }
