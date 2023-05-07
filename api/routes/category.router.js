@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 
 const CategorieService = require('../services/category.service');
 const validatorHandler = require('../middlewares/validator.handler');
@@ -82,3 +82,4 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 module.exports = router;
+ */

@@ -1,4 +1,4 @@
-const boom = require('@hapi/boom');
+/* const boom = require('@hapi/boom');
 const { models } = require('./../libs/sequelize');
 
 class OrderService {
@@ -49,3 +49,4 @@ class OrderService {
 }
 
 module.exports = OrderService;
+ */
